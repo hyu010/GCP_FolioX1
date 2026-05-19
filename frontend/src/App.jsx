@@ -76,9 +76,9 @@ function App() {
 			<main className="glass-panel">
 				<header>
 					<h1>
-						Cosmic <span className="text-gradient">Guestbook</span>
+						Foliox <span className="text-gradient">Guestbook - ADAM</span>
 					</h1>
-					<p>Leave your mark on the universe.</p>
+					<p>Leave your message to FolioX.</p>
 				</header>
 
 				<form onSubmit={handleSubmit} className="guestbook-form">
@@ -101,7 +101,7 @@ function App() {
 						/>
 					</div>
 					<button type="submit" disabled={loading} className="glow-btn">
-						{loading ? "Transmitting..." : "Send Transmission"}
+						{loading ? "Transmitting..." : "Send Message"}
 					</button>
 				</form>
 
