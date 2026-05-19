@@ -19,4 +19,4 @@ RUN npm run build --prefix frontend
 ENV NODE_ENV=production
 
 # Start the Express server
-CMD ["npm", "start"]
+CMD ["node", "backend/server.js"]

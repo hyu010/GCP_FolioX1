@@ -1,9 +1,24 @@
+process.stderr.write(`[DIAG] server.js loaded: PID=${process.pid} PORT=${process.env.PORT} K_SERVICE=${process.env.K_SERVICE}\n`);
+process.on("exit", (code) => {
+	process.stderr.write(`[DIAG] process.on(exit) code=${code}\n`);
+});
+process.on("uncaughtException", (err) => {
+	process.stderr.write(`[DIAG] uncaughtException: ${err.message}\n${err.stack}\n`);
+	process.exit(1);
+});
+process.on("unhandledRejection", (reason) => {
+	process.stderr.write(`[DIAG] unhandledRejection: ${reason}\n`);
+});
+
 require("dotenv").config();
 const path = require("node:path");
 const express = require("express");
 const cors = require("cors");
+process.stderr.write("[DIAG] requiring ./features\n");
 const { featureClient } = require("./features");
+process.stderr.write("[DIAG] features loaded\n");
 const { GoogleGenAI } = require("@google/genai");
+process.stderr.write("[DIAG] @google/genai loaded\n");
 
 const app = express();
 const port = process.env.PORT || 8080;
