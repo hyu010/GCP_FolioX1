@@ -76,7 +76,7 @@ function App() {
 			<main className="glass-panel">
 				<header>
 					<h1>
-						Foliox <span className="text-gradient">Guestbook - ADAM</span>
+						Foliox <span className="text-gradient">Guestbook - ADAM2</span>
 					</h1>
 					<p>Leave your message to FolioX.</p>
 				</header>
