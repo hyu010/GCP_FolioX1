@@ -41,19 +41,23 @@ const entries = [
 ];
 
 // --- GenAI Setup ---
-const geminiModel = process.env.GEMINI_MODEL || "gemini-3.1-flash-lite-preview";
+const geminiModel = process.env.GEMINI_MODEL || "gemini-2.0-flash";
 
-const project = process.env.GOOGLE_CLOUD_PROJECT;
-if (!project) {
-	console.error("FATAL: GOOGLE_CLOUD_PROJECT environment variable is not set.");
-	process.exit(1);
+let genAIClient;
+if (process.env.GEMINI_API_KEY) {
+	genAIClient = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+} else {
+	const project = process.env.GOOGLE_CLOUD_PROJECT;
+	if (!project) {
+		console.error("FATAL: GOOGLE_CLOUD_PROJECT environment variable is not set.");
+		process.exit(1);
+	}
+	genAIClient = new GoogleGenAI({
+		vertexai: true,
+		project,
+		location: process.env.GOOGLE_CLOUD_LOCATION || "global",
+	});
 }
-
-const genAIClient = new GoogleGenAI({
-	vertexai: true,
-	project,
-	location: process.env.GOOGLE_CLOUD_LOCATION || "global",
-});
 
 app.get("/api/entries", (_req, res) => {
 	res.json(entries);

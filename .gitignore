@@ -146,3 +146,6 @@ frontend/dist/
 backend/node_modules/
 frontend/node_modules/
 .gcloudignore
+
+# Deployment manifests that may contain secrets (API keys, env vars)
+service-deploy.yaml
