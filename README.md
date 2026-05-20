@@ -124,21 +124,28 @@ to `enabled` or `disabled` within this configuration document.
 | `cosmic-reply` | Boolean | `false` | Enables GenAI auto-replies from "Station Zenith AI" for new guestbook transmissions. |
 | `cosmic-summary` | Boolean | `false` | Enables the GenAI aggregation widget that summarizes recent guestbook activity at the top of the feed. |
 
+## 🐍 Applying This to Other Projects
 
-# how to use it in other project
-Now I want to leverage my experience with this project, and apply it to another project that feauture mortality model, and data analysis within a streamlit daSHBOARD built 
-   in python/pycharm linked to a github repo. What should I do to deploy the dashboard to google cloud?                                                                             
-  
-● Since it's a Streamlit app (a long-lived server process), Cloud Run is the right target — same as this project. The fastest path given your existing experience:
-  Recommended: use the Inner Loop (Option 2) — run the Gemini agent from inside the new project's directory:
-  gemini "Deploy this application to Google Cloud using the google-cicd-deploy skill"
-  It will detect Python, skip needing a Dockerfile (Cloud Run buildpacks support Python natively), and walk you through region/visibility prompts exactly as you've seen here.
-  Two things to sort out before running that:
+This project's deployment pattern transfers directly to other Google Cloud Run workloads. For a Python/Streamlit dashboard, Cloud Run is the right target — same infrastructure, same CI/CD pipeline.
 
-  1. Streamlit's port — Cloud Run expects port 8080, but Streamlit defaults to 8501. Either add a startup flag in your run command (streamlit run app.py --server.port 8080) or set
-  PORT=8080 as an env var. The agent may catch this, but good to know in advance.
-  2. Secrets — if the mortality model or data pipeline uses API keys or credentials, keep them out of the repo now (.gitignore any config files with secrets) and pass them as env
-  vars in the Cloud Run deploy, same pattern as GEMINI_API_KEY here.
+### Deploying a Streamlit App to Cloud Run
 
-  The main tradeoff vs. this project: a Streamlit app is stateful in memory (session state, cached dataframes), so Cloud Run's scale-to-zero and multi-instance behavior can
-  surprise you — each cold start is a fresh process. If the dashboard loads heavy model data on startup, you'll want to set a minimum instance count of 1 to avoid slow cold starts.
+Use the Inner Loop approach from inside your Streamlit project directory:
+
+```bash
+gemini "Deploy this application to Google Cloud using the google-cicd-deploy skill"
+```
+
+Cloud Run buildpacks support Python natively, so no Dockerfile is required.
+
+**Before deploying, sort out two things:**
+
+1. **Port** — Cloud Run expects port `8080`, but Streamlit defaults to `8501`. Override it at startup:
+   ```bash
+   streamlit run app.py --server.port 8080
+   ```
+   or set `PORT=8080` as a Cloud Run environment variable.
+
+2. **Secrets** — keep API keys and credentials out of the repo. Add any config files with secrets to `.gitignore` and pass them as environment variables in the Cloud Run deployment, using the same pattern as `GEMINI_API_KEY` in this project.
+
+**Key tradeoff:** Streamlit is stateful in memory (session state, cached dataframes). Cloud Run scales to zero between requests, so each cold start is a fresh process. If your app loads heavy model data on startup, set a minimum instance count of `1` to avoid slow cold starts.
