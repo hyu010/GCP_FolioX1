@@ -9,7 +9,7 @@ git clone https://github.com/kweinmeister/cosmic-guestbook.git
 cd cosmic-guestbook
 ```
 
----
+---cre
 
 ## Option 1: Localhost (Fast Progress)
 
